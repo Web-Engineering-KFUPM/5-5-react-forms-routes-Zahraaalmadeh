@@ -2,13 +2,12 @@ import { useState } from "react";
 
 export default function Registration() {
     const [email, setEmail] = useState("");
+    const [errors, setErrors] = useState({});
     const [password, setPassword] = useState("");
     const [gender, setGender] = useState("");
-    const [errors, setErrors] = useState({});
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
         const nextErrors = {};
 
         // Email validation
@@ -30,72 +29,103 @@ export default function Registration() {
 
         setErrors(nextErrors);
 
-        // Stop submit if there are errors
         if (Object.keys(nextErrors).length > 0) return;
 
         // ✅ SUCCESS ALERT (only runs if no errors)
-        alert(`User Registered: ${email}`);
+        alert(`Registration submitted: ${email}`);
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            {/* Email Field */}
-            <div className="form-row">
-                <label htmlFor="email">Email</label>
-                <input
-                    id="email"
-                    type="text"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                />
-                {errors.email && <p className="error">{errors.email}</p>}
-            </div>
+        <section>
+            <h1>Student Registration</h1>
+            <p className="muted">
+                Create your portal access. Your email will be used for course updates.
+            </p>
 
-            {/* Password Field */}
-            <div className="form-row">
-                <label htmlFor="password">Password</label>
-                <input
-                    id="password"
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                />
-                {errors.password && <p className="error">{errors.password}</p>}
-            </div>
-
-            {/* Gender Field */}
-            <fieldset className="form-row">
-                <legend>Gender</legend>
-
-                <label className="radio">
+            <form onSubmit={handleSubmit} className="card form neon">
+                {/* Email */}
+                <div className="form-row">
+                    <label htmlFor="email">Email</label>
                     <input
-                        type="radio"
-                        name="gender"
-                        value="male"
-                        checked={gender === "male"}
-                        onChange={(e) => setGender(e.target.value)}
+                        id="email"
+                        placeholder="you@example.com"
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        aria-invalid={Boolean(errors.email)}
+                        aria-describedby={errors.email ? "email-error" : undefined}
                     />
-                    Male
-                </label>
+                    {errors.email && (
+                        <p id="email-error" className="error">{errors.email}</p>
+                    )}
+                </div>
 
-                <label className="radio">
+                {/* Password */}
+                <div className="form-row">
+                    <label htmlFor="password">Password</label>
                     <input
-                        type="radio"
-                        name="gender"
-                        value="female"
-                        checked={gender === "female"}
-                        onChange={(e) => setGender(e.target.value)}
+                        id="password"
+                        placeholder="Enter your password"
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        aria-invalid={Boolean(errors.password)}
+                        aria-describedby={errors.password ? "password-error" : undefined}
                     />
-                    Female
-                </label>
+                    {errors.password && (
+                        <p id="password-error" className="error">{errors.password}</p>
+                    )}
+                </div>
 
-                {errors.gender && <p className="error">{errors.gender}</p>}
-            </fieldset>
+                {/* Gender */}
+                <fieldset className="form-row">
+                    <legend>Gender</legend>
 
-            {/* Submit Button */}
-            <button type="submit" disabled={!email || !password || !gender}>
-                Register
-            </button>
-        </form>
+                    <label className="radio">
+                        <input
+                            type="radio"
+                            name="gender"
+                            value="male"
+                            checked={gender === "male"}
+                            onChange={(e) => setGender(e.target.value)}
+                        />
+                        Male
+                    </label>
+
+                    <label className="radio">
+                        <input
+                            type="radio"
+                            name="gender"
+                            value="female"
+                            checked={gender === "female"}
+                            onChange={(e) => setGender(e.target.value)}
+                        />
+                        Female
+                    </label>
+
+                    {errors.gender && (
+                        <p className="error">{errors.gender}</p>
+                    )}
+                </fieldset>
+
+                {/* Disable the submit button until all requirements met */}
+                <button
+                    type="submit"
+                    className="btn"
+                    disabled={!email || !password || !gender}
+                >
+                    Register
+                </button>
+            </form>
+
+            <div className="card info">
+                <h3>Why Register?</h3>
+                <ul className="list">
+                    <li>📘 Access course materials & assignments</li>
+                    <li>💬 Join the discussion forum</li>
+                    <li>🎓 Track your progress & get certified</li>
+                </ul>
+            </div>
+        </section>
     );
 }
